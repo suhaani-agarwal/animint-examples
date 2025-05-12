@@ -27,6 +27,7 @@ viz <- animint(
   title = "ChIP-seq Unaligned",
   source = "https://github.com/suhaani-agarwal/animint-examples/blob/master/examples/chip.seq_unaligned.R",
   chroms = ggplot() +
+  theme_bw()+
     theme_animint(width=250, height=220) +
     geom_segment(aes(0, chr.int, xend=bases/1e6, yend=chr.int),
                  data=chip.seq$chroms, color="grey") +
@@ -48,6 +49,7 @@ viz <- animint(
     ),
   
   samples = ggplot() +
+  theme_bw()+
     scale_x_continuous("false positive/negative rate (percent)",
                       breaks=c(0, 50, 100), limits=c(-250, 100)) +
     theme_animint(width=300, height=220) +
