@@ -28,7 +28,7 @@ viz <- animint(
   source = "https://github.com/suhaani-agarwal/animint-examples/blob/master/examples/chip.seq_unaligned.R",
   chroms = ggplot() +
   theme_bw()+
-    theme_animint(width=250, height=220) +
+    theme_animint(width=300, height=270, margin(80)) +
     geom_segment(aes(0, chr.int, xend=bases/1e6, yend=chr.int),
                  data=chip.seq$chroms, color="grey") +
     geom_text(aes(0, chr.int, label=paste0("chr", chr)),
@@ -38,9 +38,11 @@ viz <- animint(
     xlim(-25, 250) +
     xlab("position on chromosome (mega base pairs)") +
     theme(axis.line.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.title.y=element_blank(),
-          axis.ticks.y=element_blank()) +
+      axis.text.y=element_blank(),
+      axis.title.y=element_blank(),
+      axis.title.x = element_text(size = 1, margin = 1),
+      axis.ticks.y=element_blank()
+      )+
     geom_point(
       aes((chromEnd+chromStart)/2/1e6, chr.int),
       data=chip.seq$set.info, 
@@ -50,9 +52,9 @@ viz <- animint(
   
   samples = ggplot() +
   theme_bw()+
-    scale_x_continuous("false positive/negative rate (percent)",
+    scale_x_continuous("false positive/negative rate (%)",
                       breaks=c(0, 50, 100), limits=c(-250, 100)) +
-    theme_animint(width=300, height=220) +
+    theme_animint(width=350, height=300) +
     scale_fill_manual(values=fp.fn.colors) +
     ggtitle("select samples") +
     ylab("sample") +
@@ -61,7 +63,10 @@ viz <- animint(
           axis.ticks.y=element_blank()),
   
   error = ggplot() +
-    theme_animint(height=220) +
+    theme_animint(height=320) +
+    theme(axis.line.y=element_blank(),
+      axis.text = element_text(size = 10),
+      axis.title = element_text(size = 10))+
     ggtitle("select model complexity and set") +
     xlab("model complexity -log(lambda)") +
     ylab("incorrect/total annotations (percent)") +
@@ -115,7 +120,7 @@ viz <- animint(
     ),
   
   roc = ggplot() +
-    theme_animint(width=200, height=220) +
+    theme_animint(width=220, height=240) +
     scale_linetype_manual(values=set.linetypes) +
     guides(size="none", linetype="none") +
     geom_path(
@@ -151,20 +156,20 @@ viz <- animint(
       showSelected="set.name"
     ) +
     geom_text(
-      aes(0.5, -0.05, label=paste0(width.bp, " bases on chr", chr)),
+      aes(0.5, -0.08, label=paste0(width.bp, " bases on chr", chr)),size = 15,
       data=chip.seq$bases,
       showSelected="set.name"
     ) +
     scale_fill_manual(values=ann.colors) +
     geom_text(
       aes(mid.norm, 1.05, label=sprintf("%d/%d=%.1f%% false positive bases",
-                                         errors, bases, percent)),
+                                         errors, bases, percent)),size = 15,
       data=chip.seq$fp.pairs,
       showSelected=c("complexity.i", "sample1", "sample2", "set.name")
     ) +
     geom_text(
       aes(mid.norm, 1.05, label=sprintf("%d/%d=%.1f%% false negative bases",
-                                         errors, bases, percent)),
+                                         errors, bases, percent)),size = 15,
       data=chip.seq$fn.pairs,
       showSelected=c("complexity.i", "sample1", "sample2", "set.name")
     ) +
@@ -196,7 +201,7 @@ viz <- animint(
       showSelected="set.name"
     ) +
     geom_text(
-      aes(0, 1, label=sprintf("%s %s max=%.1f", cell.type, sample1, max)),
+      aes(-0.07, 1.02, label=sprintf("%s %s max=%.1f", cell.type, sample1, max)),size = 15,
       data=chip.seq$signal.max$sample1,
       hjust=0,
       showSelected=c("set.name", "sample1")
@@ -208,7 +213,7 @@ viz <- animint(
       showSelected=c("set.name", "sample1")
     ) +
     geom_text(
-      aes(0, -1, label=sprintf("%s %s max=%.1f", cell.type, sample2, max)),
+      aes(-0.07, -1, label=sprintf("%s %s max=%.1f", cell.type, sample2, max)),size = 15,
       data=chip.seq$signal.max$sample2,
       hjust=0,
       showSelected=c("set.name", "sample2")
@@ -278,4 +283,4 @@ for(selector.name in names(chip.seq$samples)){
     )
 }
 
-animint2pages(viz, "chip-seq-unaligned")
+animint2dir(viz, "chip-seq-unaligned")
